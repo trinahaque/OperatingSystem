@@ -179,9 +179,6 @@ void * countWords(void * arg){
 
  // argc is numner of command line arguments
 int main(int argc, char** argv){
-    // processCount is number of threads
-    // chunkInfo 
-    // fd is file
     int numberOfThreads;
     int file;
     long fileSize;
@@ -189,7 +186,6 @@ int main(int argc, char** argv){
     pthread_t * threadArray;
     fileInfo * fileArray;
     struct table *t = createTable(1000);
-    // init_hash_table();
 
     if (pthread_mutex_init(&lock, NULL) != 0){
         printf("\n mutex init failed\n");
@@ -212,7 +208,7 @@ int main(int argc, char** argv){
     
     // handles file
     // argv[1] gives us filename
-    file = open(argv[1], O_RDONLY);
+    file = open(fileName, O_RDONLY);
     lseek(file, 0, SEEK_END);
     fileSize = lseek(file, 0, SEEK_CUR);
     lseek(file, 0, SEEK_SET);
@@ -259,16 +255,16 @@ int main(int argc, char** argv){
     for(int i = 0; i < numberOfThreads; i++){
         pthread_join(threadArray[i], NULL);
     }
-    // printf("hashtable size %d", t->size);
-    // for (int i = 0; i < t-> size; i++){
-    //     struct node *list = t->list[i]; // Array of node list
-    //     struct node *temp = list; // list gives a single node 
-    //     while(temp){
-    //         printf("%s ",temp->key);
-    //         printf("%d\n",temp->val);
-    //         temp = temp->next;
-    //     }
-    // }
+    printf("hashtable size %d", t->size);
+    for (int i = 0; i < t-> size; i++){
+        struct node *list = t->list[i]; // Array of node list
+        struct node *temp = list; // list gives a single node 
+        while(temp){
+            printf("%s ",temp->key);
+            printf("%d\n",temp->val);
+            temp = temp->next;
+        }
+    }
 
     clock_gettime(CLOCK_REALTIME, &endTime);
     time_t sec = endTime.tv_sec - startTime.tv_sec;
