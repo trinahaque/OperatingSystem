@@ -13,17 +13,11 @@
 
 pthread_mutex_t lock;
 
-// typedef struct node{
-//     char * key;
-//     int val;
-//     struct node *next;
-// } *node;
-
 struct node{
     char * key;
     int val;
     struct node *next;
-};
+}node;
 
 struct table{
     int size;
@@ -40,7 +34,7 @@ struct table *createTable(int size){
     return t;
 }
 
-
+// takes the table and key and generates a hashvalue
 int hashCode(struct table *t, char *key) {
     unsigned long int hash_value = 0;
     unsigned int i;
@@ -86,18 +80,6 @@ int lookup(struct table *t, char * key){
     }
     return -1;
 }
-// node lookup(struct table *t, char * key){
-//     int pos = hashCode(t,key);
-//     struct node *list = t->list[pos];
-//     struct node *temp = list;
-//     while(temp){
-//         if(temp->key==key){
-//             return temp;
-//         }
-//         temp = temp->next;
-//     }
-//     return NULL;
-// }
 
 
 // needs struct anytime passing in multiple data type
@@ -159,7 +141,7 @@ void * countWords(void * arg){
                 // tmp->val += 1;
             }
             pthread_mutex_unlock(&lock);
-            printf("word is: %s\n", stringToken);
+            // printf("word is: %s\n", stringToken);
         }
         stringToken = strtok_r(NULL, delimeter, &saveptr);
     }while(stringToken);
@@ -181,6 +163,9 @@ int main(int argc, char** argv){
     int file;
     long fileSize;
     char * fileName;
+    // node * is an item node
+    // node ** is an array of nodes
+    struct node ** frequencyArray;
     pthread_t * threadArray;
     fileInfo * fileArray;
     struct table *t = createTable(1000);
@@ -222,6 +207,8 @@ int main(int argc, char** argv){
     fileArray = malloc (sizeof(fileInfo) * numberOfThreads);
     // creates an array of p_thread id
     threadArray = malloc (sizeof(pthread_t) * numberOfThreads);
+    // initialize an array with total size of hashtable
+    
 
     for (int i = 0; i < numberOfThreads; i++){
         // need this to be a fileArray because it will create different pointers
@@ -254,12 +241,32 @@ int main(int argc, char** argv){
         pthread_join(threadArray[i], NULL);
     }
     // printf("hashtable size %d", t->size);
+    
+
+    int numberOfUniqueWords = 0;
     for (int i = 0; i < t-> size; i++){
         struct node *list = t->list[i]; // Array of node list
         struct node *temp = list; // list gives a single node 
         while(temp){
-            printf("%s ",temp->key);
-            printf("%d\n",temp->val);
+            // frequencyArray[i] = temp;
+            numberOfUniqueWords += 1;
+            // printf("%s ",temp->key);
+            // printf("%d\n",temp->val);
+            temp = temp->next;
+        }
+    }
+
+    frequencyArray = malloc (sizeof(struct node *)*numberOfUniqueWords);
+    // printf("%d\n", numberOfUniqueWords);
+
+    for (int i = 0; i < t-> size; i++){
+        struct node *list = t->list[i]; // Array of node list
+        struct node *temp = list; // list gives a single node 
+        while(temp){
+            frequencyArray[i] = temp;
+            // numberOfUniqueWords += 1;
+            // printf("%s ",temp->key);
+            // printf("%d\n",temp->val);
             temp = temp->next;
         }
     }
