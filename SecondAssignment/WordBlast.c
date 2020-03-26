@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 pthread_mutex_t lock;
 
@@ -24,6 +25,7 @@ struct table{
     struct node **list;
 };
 
+// generating the hash table and returning struct table
 struct table *createTable(int size){
     struct table *t = (struct table*)malloc(sizeof(struct table));
     t->size = size;
@@ -50,13 +52,17 @@ int hashCode(struct table *t, char *key) {
 
     return hash_value;
 }
+
+// inserting key/value to a hashtable
 void insert(struct table *t, char * key, int val){
+   
     int pos = hashCode(t,key);
     struct node *list = t->list[pos];
     struct node *newNode = (struct node*)malloc(sizeof(struct node));
     struct node *temp = list;
     while(temp){
-        if(strcmp(temp->key,key) == 0){
+        // strCmpi is case insensitive
+        if(strcasecmp(temp->key, key) == 0){
             temp->val = val;
             return;
         }
@@ -68,12 +74,13 @@ void insert(struct table *t, char * key, int val){
     t->list[pos] = newNode;
 }
 
+// given a key, the function checks if it's in the table
 int lookup(struct table *t, char * key){
     int pos = hashCode(t,key);
     struct node *list = t->list[pos];
     struct node *temp = list;
     while(temp){
-        if(strcmp(temp->key,key) == 0){
+        if(strcasecmp(temp->key,key) == 0){
             return temp->val;
         }
         temp = temp->next;
@@ -156,6 +163,7 @@ void * countWords(void * arg){
     return NULL;
 }
 
+// swapping two nodes
 void swap(struct node *xp, struct node *yp) { 
     struct node temp = *xp; 
     *xp = *yp; 
@@ -199,6 +207,11 @@ int main(int argc, char** argv){
     // handles file
     // argv[1] gives us filename
     file = open(fileName, O_RDONLY);
+    // printf("file is %d \n", file);
+    if (file < 0){
+        printf("Invalid file \n");
+        return 1;
+    }
     lseek(file, 0, SEEK_END);
     fileSize = lseek(file, 0, SEEK_CUR);
     lseek(file, 0, SEEK_SET);
@@ -279,6 +292,8 @@ int main(int argc, char** argv){
         }
     }
 
+    //selection sort from geek for geeks
+
     int i, j, min_idx; 
   
     // One by one move boundary of unsorted subarray 
@@ -299,12 +314,8 @@ int main(int argc, char** argv){
     // print the top 10 words
 
     for (int index = 0; index < 10; index++){
-        printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
-        // struct node *check = frequencyArray[index];
-        // char * checkKey = check->key;
-        // int checkVal = check->val;
-        // printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
-        // printf("%d",frequencyArray[index]->val);
+        printf("Number %d is %s with a count of %d\n ", index+1, frequencyArray[index]->key, frequencyArray[index]->val); 
+
     }
 
 
