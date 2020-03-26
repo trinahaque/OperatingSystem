@@ -62,7 +62,7 @@ void insert(struct table *t, char * key, int val){
     struct node *newNode = (struct node*)malloc(sizeof(struct node));
     struct node *temp = list;
     while(temp){
-        if(temp->key==key){
+        if(strcmp(temp->key,key) == 0){
             temp->val = val;
             return;
         }
@@ -79,7 +79,7 @@ int lookup(struct table *t, char * key){
     struct node *list = t->list[pos];
     struct node *temp = list;
     while(temp){
-        if(temp->key==key){
+        if(strcmp(temp->key,key) == 0){
             return temp->val;
         }
         temp = temp->next;
@@ -146,21 +146,19 @@ void * countWords(void * arg){
 
     do{
         if (strlen(stringToken) > 5){
-            totalWords += 1;
+            pthread_mutex_lock(&lock);
+            // totalWords += 1;
             int tmp = lookup(t, stringToken);
             // node tmp = lookup(t, stringToken);
             if (tmp == -1){
-                pthread_mutex_lock(&lock);
                 insert(t, stringToken, 1);
-                pthread_mutex_unlock(&lock);
             }
             else{
-                pthread_mutex_lock(&lock);
                 // insert(t, stringToken, tmp->val + 1);
                 insert(t, stringToken, tmp + 1);
                 // tmp->val += 1;
-                pthread_mutex_unlock(&lock);
             }
+            pthread_mutex_unlock(&lock);
             printf("word is: %s\n", stringToken);
         }
         stringToken = strtok_r(NULL, delimeter, &saveptr);
@@ -255,7 +253,7 @@ int main(int argc, char** argv){
     for(int i = 0; i < numberOfThreads; i++){
         pthread_join(threadArray[i], NULL);
     }
-    printf("hashtable size %d", t->size);
+    // printf("hashtable size %d", t->size);
     for (int i = 0; i < t-> size; i++){
         struct node *list = t->list[i]; // Array of node list
         struct node *temp = list; // list gives a single node 
