@@ -156,6 +156,13 @@ void * countWords(void * arg){
     return NULL;
 }
 
+void swap(struct node *xp, struct node *yp) { 
+    struct node temp = *xp; 
+    *xp = *yp; 
+    *yp = temp; 
+} 
+  
+
 
  // argc is numner of command line arguments
 int main(int argc, char** argv){
@@ -272,37 +279,33 @@ int main(int argc, char** argv){
         }
     }
 
-    // for (int index = 0; index < numberOfUniqueWords; index++){
-    //     // struct node *check = frequencyArray[index];
-    //     // char * checkKey = check->key;
-    //     // int checkVal = check->val;
-    //     printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
-    // //     printf("%d",frequencyArray[index]->val);
-    // }
+    int i, j, min_idx; 
+  
+    // One by one move boundary of unsorted subarray 
+    for (i = 0; i < numberOfUniqueWords-1; i++) 
+    { 
+        // Find the minimum element in unsorted array 
+        min_idx = i; 
+        for (j = i+1; j < numberOfUniqueWords; j++) 
+          if (frequencyArray[j]->val > frequencyArray[min_idx]->val) 
+            min_idx = j; 
+  
+        // Swap the found minimum element with the first element 
+        swap(frequencyArray[min_idx], frequencyArray[i]); 
+    } 
 
-    // insertion sort from geeksfor geeks
-    // int i, keyVal, j;
-    // for (i = 1; i < numberOfUniqueWords; i++){
-    //     // printf(frequencyArray[i]);
-    //     keyVal = frequencyArray[i]->val;
-    //     j = i - 1;
 
-    //     while (j >= 0 && frequencyArray[j]->val > keyVal){
-    //         frequencyArray[j+1] = frequencyArray[j];
-    //         j = j - 1;
-    //     }
-    //     frequencyArray[j + 1]->val = keyVal;
-    // }
 
-    // // print the top 10 words
+    // print the top 10 words
 
-    // for (int index = 0; index < numberOfUniqueWords; index++){
-    //     // struct node *check = frequencyArray[index];
-    //     // char * checkKey = check->key;
-    //     // int checkVal = check->val;
-    //     printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
-    //     // printf("%d",frequencyArray[index]->val);
-    // }
+    for (int index = 0; index < 10; index++){
+        printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
+        // struct node *check = frequencyArray[index];
+        // char * checkKey = check->key;
+        // int checkVal = check->val;
+        // printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
+        // printf("%d",frequencyArray[index]->val);
+    }
 
 
     clock_gettime(CLOCK_REALTIME, &endTime);
