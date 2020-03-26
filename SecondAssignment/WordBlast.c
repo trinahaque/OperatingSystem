@@ -258,18 +258,52 @@ int main(int argc, char** argv){
 
     frequencyArray = malloc (sizeof(struct node *)*numberOfUniqueWords);
     // printf("%d\n", numberOfUniqueWords);
-
+    int counter = 0; 
     for (int i = 0; i < t-> size; i++){
         struct node *list = t->list[i]; // Array of node list
         struct node *temp = list; // list gives a single node 
         while(temp){
-            frequencyArray[i] = temp;
+            frequencyArray[counter] = temp;
             // numberOfUniqueWords += 1;
-            // printf("%s ",temp->key);
-            // printf("%d\n",temp->val);
+            // printf("%s ",frequencyArray[counter]->key);
+            // printf("%d\n", frequencyArray[counter]->val);
             temp = temp->next;
+            counter++;
         }
     }
+
+    // for (int index = 0; index < numberOfUniqueWords; index++){
+    //     // struct node *check = frequencyArray[index];
+    //     // char * checkKey = check->key;
+    //     // int checkVal = check->val;
+    //     printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
+    // //     printf("%d",frequencyArray[index]->val);
+    // }
+
+    // insertion sort from geeksfor geeks
+    // int i, keyVal, j;
+    // for (i = 1; i < numberOfUniqueWords; i++){
+    //     // printf(frequencyArray[i]);
+    //     keyVal = frequencyArray[i]->val;
+    //     j = i - 1;
+
+    //     while (j >= 0 && frequencyArray[j]->val > keyVal){
+    //         frequencyArray[j+1] = frequencyArray[j];
+    //         j = j - 1;
+    //     }
+    //     frequencyArray[j + 1]->val = keyVal;
+    // }
+
+    // // print the top 10 words
+
+    // for (int index = 0; index < numberOfUniqueWords; index++){
+    //     // struct node *check = frequencyArray[index];
+    //     // char * checkKey = check->key;
+    //     // int checkVal = check->val;
+    //     printf("array is %s %d\n ", frequencyArray[index]->key, frequencyArray[index]->val); 
+    //     // printf("%d",frequencyArray[index]->val);
+    // }
+
 
     clock_gettime(CLOCK_REALTIME, &endTime);
     time_t sec = endTime.tv_sec - startTime.tv_sec;
